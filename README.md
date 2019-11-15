@@ -1,4 +1,4 @@
 # ai-website-builder
 
-node start
-npm run tunnel   
+-- node start
+-- npm run tunnel   
