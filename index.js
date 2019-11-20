@@ -5,90 +5,61 @@
 'use strict';
 const express = require('express')
 const path = require('path')
+const basicAuth = require('express-basic-auth')
 const bodyParser = require('body-parser')
+const { WebhookClient,Card, Suggestion } = require('dialogflow-fulfillment')
 
-const { WebhookClient,Card, Suggestion, Image } = require('dialogflow-fulfillment')
 
+
+// Import the service function and various response classes
+const {
+  dialogflow,
+  actionssdk,
+  Image,
+  Table,
+  Carousel,
+  Permission
+} = require('actions-on-google');
+
+
+
+const {welcomeIntent} = require('./server/intents/welcome')
+const {PurchaseDomainIntent} = require('./server/intents/purchase-domain')
+const {fallbackIntent, DisplayOptions} = require('./server/intents/fallback')
+const {BuildAWebsiteStep1Intent,BuildAWebsiteStep2Intent} = require('./server/intents/build-website')
 const port = process.env.PORT || 3000;
 
-const app = express()
+const expressApp = express().use(bodyParser.json());
 
+const dialogflowApp = dialogflow();
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+// Welcome Intent
+dialogflowApp.intent('Default Welcome Intent', (conv)=> welcomeIntent(conv));
 
-app.use(express.static(path.join(__dirname, 'client/build')))
+dialogflowApp.intent('Default Fallback Intent', (conv)=> fallbackIntent(conv)); 
+dialogflowApp.intent('Create Website', (conv)=> BuildAWebsiteStep1Intent(conv));
+dialogflowApp.intent('BuildaWebsite - build website-Step2', (conv)=> BuildAWebsiteStep2Intent(conv));
+dialogflowApp.intent('Purchase Domain', (conv,param)=> PurchaseDomainIntent(conv,param));
+dialogflowApp.intent('Show Display Options',(conv) => DisplayOptions(conv))
 
-app.get('/', function (req, res) {
+expressApp.listen(port, () => console.log(`Listening on port ${port}`));
+
+expressApp.use(express.static(path.join(__dirname, 'client/build')))
+
+expressApp.use(basicAuth( { authorizer: basicAuthorizer } ))
+ 
+function basicAuthorizer(username, password) {
+    const userMatches = basicAuth.safeCompare(username, 'endoInnoJam2019')
+    const passwordMatches = basicAuth.safeCompare(password, 'endoWebAI')
+ 
+    return userMatches & passwordMatches
+}
+
+expressApp.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
-app.get('/status', (req, res) => res.send('Up and running'))
+expressApp.get('/status', (req, res) => res.send('Up and running'))
 
-app.post('/webai', express.json(), (req, res) => {
-  const agent = new WebhookClient({ request: req, response: res })
-  console.log("\n\n************************************************\n")
-  console.log('Dialogflow Request headers: \n' + JSON.stringify(req.headers));
-  console.log("\n\n************************************************\n")
-  console.log('Dialogflow Request body: \n' + JSON.stringify(req.body));
-  console.log("\n\n************************************************")
- 
+expressApp.post('/webai', dialogflowApp)
 
-  function welcome () {
-    agent.add('Hello! Welcome to Website Builder.One stop to increase your online presence. Just say \'Create Website\' to start the process!')
-    
-    agent.add(new Card({
-      title: `Title: this is a card title`,
-      imageUrl: 'https://cloud.peachd.com/prod/images/gateway_v2/intro/menus.png',
-      text: `This is the body text of a card.  You can even use line\n  breaks and emoji! 💁`,
-      buttonText: 'This is a button',
-      buttonUrl: 'https://assistant.google.com/'
-    }));
-    agent.add(new Suggestion(`Create website`));
-    agent.add(new Suggestion(`Build website`));
-  }
-
-  function signIn(app) {
-    app.askForSignIn();
-  }
-  function signInHandler(app) {
-    if (app.getSignInStatus() === app.SignInStatus.OK) {
-      let accessToken = app.getUser().accessToken;
-    } else {
-      app.tell('You need to sign-in before using the app.');
-    }
-  }
-  function fallback(agent) {
-    agent.add(`I'm sorry, can you try again?`);
-    agent.add(new Suggestion(`Create Website`));
-  }
-
-  function gatherInformation(agent){
-    agent.add(`Great, lets build a website. But before that I will need few basic information. Let me know when you are ready.`);   
-    agent.add(new Suggestion(`Ok`));
-    agent.add(new Suggestion(`Ready`));
-    agent.add(new Suggestion(`Let's do it.`));
-  }
-  function generateWebsiteUrl(agent) {
-    agent.add(`Hold Tight, we are working on creating a new URL for your awesome website.`);
-    agent.add( new Image('https://cloud.peachd.com/prod/images/gateway_v2/intro/menus.png'))
-    agent.add(new Card({
-        title: `Title: this is a card title`,
-        imageUrl: 'https://cloud.peachd.com/prod/images/gateway_v2/intro/menus.png',
-        text: `This is the body text of a card.  You can even use line\n  breaks and emoji! 💁`,
-        buttonText: 'This is a button',
-        buttonUrl: 'https://assistant.google.com/'
-      })
-    );
-    // agent.add(new Suggestion(`Quick Reply`));
-    // agent.add(new Suggestion(`Suggestion`));
-    // agent.context.set({ name: 'weather', lifespan: 2, parameters: { city: 'Rome' }});
-  }
-
-  let intentMap = new Map()
-  intentMap.set('Default Welcome Intent', welcome)
-  intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('BuildAWebsite - build website-Step2', generateWebsiteUrl);
-  intentMap.set('BuildAWebsite- Step 1', gatherInformation);
-  agent.handleRequest(intentMap)
-  
-}) 
