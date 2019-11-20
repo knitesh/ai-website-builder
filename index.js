@@ -59,46 +59,46 @@ expressApp.get('/status', (req, res) => res.send('Up and running'))
 
 expressApp.post('/webai', dialogflowApp)
 
-// expressApp.post('/webaisms',(req, res) => {
+expressApp.post('/webaisms',(req, res) => {
   
-//   const agent = new WebhookClient({ request: req, response: res })
+  const agent = new WebhookClient({ request: req, response: res })
 
-//   console.log("\n\n************************************************\n")
-//   // console.log('Dialogflow Request headers: \n' + JSON.stringify(req.headers));
-//   console.log("\n\n************************************************\n")
-//   // console.log('Dialogflow Request body: \n' + JSON.stringify(req.body));
-//   console.log('queryText: \n' + JSON.stringify(req.body.queryResult.queryText));
-//   console.log('fulfillmentText: \n' + JSON.stringify(req.body.queryResult.fulfillmentText));
-//   console.log('fulfillmentText: \n' + JSON.stringify(req.body.queryResult.parameters));
-//   console.log("\n\n************************************************")
+  console.log("\n\n************************************************\n")
+  // console.log('Dialogflow Request headers: \n' + JSON.stringify(req.headers));
+  console.log("\n\n************************************************\n")
+  // console.log('Dialogflow Request body: \n' + JSON.stringify(req.body));
+  console.log('queryText: \n' + JSON.stringify(req.body.queryResult.queryText));
+  console.log('fulfillmentText: \n' + JSON.stringify(req.body.queryResult.fulfillmentText));
+  console.log('fulfillmentText: \n' + JSON.stringify(req.body.queryResult.parameters));
+  console.log("\n\n************************************************")
  
 
-//   const welcomeHandler = () => welcomeSmsIntent(agent)
+  // const welcomeHandler = () => welcomeSmsIntent(agent)
 
-//   const fallbackHandler = () => fallbackSmsIntent(agent)
+  // const fallbackHandler = () => fallbackSmsIntent(agent)
 
-//   const BuildAWebsiteStep1Handler = () =>BuildAWebsiteStep1SmsIntent(agent)
+  // const BuildAWebsiteStep1Handler = () =>BuildAWebsiteStep1SmsIntent(agent)
 
-//   const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2SmsIntent(agent)
+  // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2SmsIntent(agent)
 
-//   const PurchaseDomainHandler = () => PurchaseDomainSmsIntent(agent,req.body.queryResult)
+  const PurchaseDomainHandler = () => PurchaseDomainSmsIntent(agent,req.body.queryResult)
 
-//   // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2Intent(agent)
+  // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2Intent(agent)
 
-//   let intentMap = new Map()
+  let intentMap = new Map()
 
-//   intentMap.set('Default Welcome Intent', welcomeHandler)
-//   intentMap.set('Default Fallback Intent', fallbackHandler); 
-//   intentMap.set('Create Website', BuildAWebsiteStep1Handler);
-//   intentMap.set('BuildAWebsite - build website-Step2', BuildAWebsiteStep2Handler);
-//   intentMap.set('Purchase Domain', PurchaseDomainHandler);
+  // intentMap.set('Default Welcome Intent', welcomeHandler)
+  // intentMap.set('Default Fallback Intent', fallbackHandler); 
+  // intentMap.set('Create Website', BuildAWebsiteStep1Handler);
+  // intentMap.set('BuildAWebsite - build website-Step2', BuildAWebsiteStep2Handler);
+  intentMap.set('Purchase Domain', PurchaseDomainHandler);
 
 
-//   try{
-//     agent.handleRequest(intentMap)
-//   }catch(err){
-//     console.log(err)
-//   }
+  try{
+    agent.handleRequest(intentMap)
+  }catch(err){
+    console.log(err)
+  }
   
-// }) 
+}) 
 
