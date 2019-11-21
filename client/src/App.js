@@ -7,15 +7,21 @@ function App() {
     <div className="App">
        <div id="app" class="container-fluid">
       <div class="row align-items-center no-gutters">
+     
         <div class="offset-md-1 col-md-6 col-12 p-5 p-md-0">
-          <h3 class="d-flex pb-3">
-            <span class="pt-1">ENDO The Digital Marketing Partner</span>
-            <img
-              class="float-right endo-icon"
+        <div class='text-center'>
+          <img
+              class="endo-icon"
               src="ENDO.svg"
               alt="endr"
             />
+          </div>
+          <h3 class="d-flex pb-3">
+            <span class="pt-1">ENDO The Digital Marketing Partner</span>
+            
           </h3>
+          
+         
           <p>
             Builder and Constant Contact have many point solutions for customers
             to market themselves. How can we help customer choose the right
