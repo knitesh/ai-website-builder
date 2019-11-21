@@ -5,13 +5,9 @@ const find = require("lodash/find");
 
 const gmbListingYes = (conv, param) => {
   const { businessName, businessCategory, businessAddress,businessPhone } = param;
-  console.log();
-  conv.ask("Creating your website");
 
   return new Promise((resolve, reject) => {
-    // const endpoint = `https://business-info-api.qa.ctctdev.co/v1.0/business_location/innojam`;
-    // console.log(endpoint);
-
+    
     const jsonBody = {
       business_name: businessName,
       business_category: businessCategory,
@@ -19,7 +15,7 @@ const gmbListingYes = (conv, param) => {
       business_phone: businessPhone
     };
 
-    console.log(JSON.stringify(jsonBody))
+    // console.log(JSON.stringify(jsonBody))
 
     fetch("https://business-info-api.qa.ctctdev.co/v1.0/business_location/innojam", {
       method: "POST",      

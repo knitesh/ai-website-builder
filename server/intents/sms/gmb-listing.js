@@ -3,8 +3,6 @@ const find = require("lodash/find");
 
 const gmbListingYes = (agent, param) => {
   const { businessName, businessCategory, businessAddress,businessPhone } = param.parameters;
-  console.log();
-  agent.add("Creating your website");
 
   return new Promise((resolve, reject) => {
     // const endpoint = `https://business-info-api.qa.ctctdev.co/v1.0/business_location/innojam`;

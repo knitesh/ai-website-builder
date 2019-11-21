@@ -86,6 +86,8 @@ const purchaseDomainYes = (conv) => {
       }),
       display: 'CROPPED',   
   }));
+  conv.ask(new Suggestions(`Create website`));
+  conv.ask(new Suggestions(`Get Listed`));
 }
 
 
