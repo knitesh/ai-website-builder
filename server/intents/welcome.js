@@ -1,10 +1,8 @@
 const {
- 
-  Suggestions,
-  
+  Suggestions 
 } = require("actions-on-google");
 
-const { WebhookClient,Card, Suggestion, Image } = require('dialogflow-fulfillment')
+
 
 const welcomeIntent = conv => {
   if (conv.user.last.seen) {
@@ -21,20 +19,10 @@ const welcomeIntent = conv => {
   conv.ask(new Suggestions(`Purchase Domain`));
   conv.ask(new Suggestions(`Get Listed`));
 };
-const welcomeSmsIntent = agent => {
-  agent.add(
-    "Welcome to Endo AI. One stop to increase your online presence. Just say 'Create Website', 'Purchase Domain' or 'Get Listed' to start the process!"
-  );
 
-  agent.add(new Suggestion(`Create website`));
-  agent.add(new Suggestion(`Purchase Domain`));
-  agent.add(new Suggestion(`Get Listed`));
-};
 
-module.exports = {
-  
-  welcomeIntent,
-  welcomeSmsIntent,
+module.exports = {  
+  WelcomeIntent: welcomeIntent
 };
 
 // module.exports = {}
