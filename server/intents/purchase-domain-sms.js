@@ -1,15 +1,11 @@
 const fetch = require("node-fetch");
-const find = require('lodash/find');
-const {  Suggestion } = require('dialogflow-fulfillment')
-const { Suggestions, List, Image, BasicCard, Button } = require("actions-on-google");
+const find = require("lodash/find");
+const { Card } = require("dialogflow-fulfillment");
 
+const purchaseDomainSMS = (agent, param) => {
+  console.log(param.parameters.domainName);
 
-
-const WHOIS_API_KEY = `at_K6Mkg28rXx6seuy8XgrpS6BhNO3vT`;
-const URL = `https://domain-availability-api.whoisxmlapi.com/api/v1?apiKey=${WHOIS_API_KEY}&domainName=`;
-
-const purchaseDomain = (conv, { domainName }) => {
-  console.log(domainName);
+  const domainName = param.parameters.domainName.toLowerCase();
   return new Promise((resolve, reject) => {
     // const endpoint = URL + domainName;
     // console.log(endpoint);
@@ -24,11 +20,13 @@ const purchaseDomain = (conv, { domainName }) => {
       .then(res => {
         const { results } = res;
         const domains = [];
+        const availableDomains = [];
 
         let count = 0;
         results.forEach(element => {
           if (element.domainInfo.domain === domainName && count == 0) {
             domains.push({
+              id: 0,
               domainName: element.domainInfo.domain,
               availability: element.domainInfo.availability
             });
@@ -39,6 +37,7 @@ const purchaseDomain = (conv, { domainName }) => {
         results.forEach(element => {
           if (element.domainInfo.availability && count < 5) {
             domains.push({
+              id: 1 + count,
               domainName: element.domainInfo.domain,
               availability: element.domainInfo.availability
             });
@@ -47,49 +46,56 @@ const purchaseDomain = (conv, { domainName }) => {
         });
 
         const domainAvailability = domains[0].availability;
+        console.log(domains);
         console.log("domain availability =  ", domainAvailability);
         if (!domainAvailability) {
-          conv.ask(domains[0].domainName + " is not available.");
-          conv.ask("Here are few available domains");
+          agent.add(domains[0].domainName + " is not available.");
+
           domains.forEach(domain => {
             if (domain.availability) {
-              conv.ask(new Suggestions(domain.domainName));
+              // agent.add(domain.domainName);
+              availableDomains.push(domain.domainName);
             }
           });
+          const msg =
+            "Here are few available domains  \n" +
+            availableDomains.join("  \n").toString();
+          agent.add(msg);
         } else {
-          conv.ask(
+          agent.add(
             domains[0].domainName + " is available. Do you want to buy it?"
           );
-          conv.contexts.set('buy-available-domain', 5, {availableDomain: domains[0].domainName} );
+
+          agent.context.set({
+            name: "buy-available-domain",
+            lifespan: 5,
+            parameters: {
+              availableDomain: domains[0].domainName
+            }
+          });
         }
         return resolve();
       });
   });
 };
 
+const purchaseDomainYesSMS = agent => {
+  // const {availableDomain} = agent.contexts.get('buy-available-domain').parameters
 
-const purchaseDomainYes = (conv) => {
-  const {availableDomain} = conv.contexts.get('buy-available-domain').parameters 
+  const { availableDomain } = find(agent.contexts, {
+    name: "buy-available-domain"
+  }).parameters;
 
-    conv.ask('Great!')
-    conv.ask(new BasicCard({
-      text: ` Click on below button to enter your billing information and owning this awesome site`,
-      subtitle: '',
-      title: availableDomain,
-      buttons: new Button({
-        title: 'Checkout',
-        url: `https://innojam-webai.azurewebsites.net/checkout.html?urlName=${availableDomain}`,
-      }),
-      image: new Image({
-        url: 'https://innojam-webai.azurewebsites.net/endo.svg',
-        alt: 'Endo Checkout',
-      }),
-      display: 'CROPPED',   
-  }));
-}
-
+  agent.add(
+    "Great!Click on below link to enter your billing information and owning this awesome site",
+    availableDomain
+  );
+  agent.add(
+    `https://innojam-webai.azurewebsites.net/checkout.html?urlName=${availableDomain}`
+  );
+};
 
 module.exports = {
-  PurchaseDomainIntent: purchaseDomain,
-  PurchaseDomainYesIntent: purchaseDomainYes
+  PurchaseDomainSmsIntent: purchaseDomainSMS,
+  PurchaseDomainYesSMSIntent: purchaseDomainYesSMS
 };

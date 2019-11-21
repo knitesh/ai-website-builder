@@ -1,22 +1,65 @@
-.App {
-  text-align: center;
+:root {
+  --black-solid: #000;
+  --black-light: rgba(0, 0, 0, 0.4);
+  --black-med: rgba(0, 0, 0, 0.6);
 }
 
-.App-logo {
-  height: 40vmin;
+body {
+  font-family: "SF Pro Display", Helvetica, Arial, san-serif;
+  color: var(--black-solid);
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  background: rgb(93, 10, 229);
+  background: linear-gradient(
+    45deg,
+    rgba(93, 10, 229, 1) 29%,
+    rgba(221, 96, 96, 1) 80%
+  );
 }
+.endo {
+  width: 250px;
+}
+#app {
+  background: #f6f6f6;
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100vh;
+  background: rgb(93, 10, 229);
+  background: linear-gradient(
+    45deg,
+    rgba(93, 10, 229, 1) 29%,
+    rgba(221, 96, 96, 1) 80%
+  );
+  /* background-image: url("bg_graphic.png"); */
+  background-image: url('./images/bg_graphic.png');
+  background-repeat: no-repeat;
+  background-position: right bottom;
+}
+.btn {
+  font-weight: 700;
+  border-radius: 40px;
+}
+.card {
+  border-radius: 40px;
+  min-height: auto;
+  color: var(--black-solid);
+  border: 0;
+  box-shadow: rgba(0, 0, 0, 0.05) 1px 5px 12px 0px;
+}
+h3 {
+  font-weight: 800;
+  height: auto;
+  font-size: 2.5rem;
+  line-height: 3rem;
 }
 
-.App-link {
-  color: #09d3ac;
+p {
+}
+
+.endo-icon {
+  width: 100px;
+  height: 100px;
 }

@@ -8,18 +8,14 @@ const path = require('path')
 const basicAuth = require('express-basic-auth')
 const bodyParser = require('body-parser')
 const { WebhookClient} = require('dialogflow-fulfillment')
-
-
-
 // Import the service function and various response classes
-const {
-  dialogflow
-} = require('actions-on-google');
+const {dialogflow} = require('actions-on-google');
 
 
 
 const {welcomeIntent, welcomeSmsIntent} = require('./server/intents/welcome')
-const {PurchaseDomainIntent, PurchaseDomainSmsIntent} = require('./server/intents/purchase-domain')
+const {PurchaseDomainIntent, PurchaseDomainYesIntent} = require('./server/intents/purchase-domain')
+const {PurchaseDomainSmsIntent, PurchaseDomainYesSMSIntent} = require('./server/intents/purchase-domain-sms')
 const {fallbackIntent,fallbackSmsIntent, DisplayOptions} = require('./server/intents/fallback')
 const {CreateWebsiteIntent,CreateWebsiteStep3Intent, CreateWebsiteStep2Intent } = require('./server/intents/build-website')
 const port = process.env.PORT || 3000;
@@ -36,6 +32,7 @@ dialogflowApp.intent('Create Website', (conv)=> CreateWebsiteIntent(conv));
 dialogflowApp.intent('Create Website - Step2 - Start Creating New WebPage', (conv,param)=> CreateWebsiteStep2Intent(conv,param));
 dialogflowApp.intent('Create Website - Step3 - Start Creating New WebPage', (conv,params, option)=> CreateWebsiteStep3Intent(conv,params, option));
 dialogflowApp.intent('Purchase Domain', (conv,param)=> PurchaseDomainIntent(conv,param));
+dialogflowApp.intent('Purchase Domain - yes', (conv,param)=> PurchaseDomainYesIntent(conv,param));
 dialogflowApp.intent('Show Display Options',(conv) => DisplayOptions(conv))
 
 expressApp.listen(port, () => console.log(`Listening on port ${port}`));
@@ -54,6 +51,9 @@ function basicAuthorizer(username, password) {
 expressApp.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
+// expressApp.get('/checkout', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'client/build', 'checkout.html'));
+// });
 
 expressApp.get('/status', (req, res) => res.send('Up and running'))
 
@@ -73,15 +73,9 @@ expressApp.post('/webaisms',(req, res) => {
   console.log("\n\n************************************************")
  
 
-  // const welcomeHandler = () => welcomeSmsIntent(agent)
-
-  // const fallbackHandler = () => fallbackSmsIntent(agent)
-
-  // const BuildAWebsiteStep1Handler = () =>BuildAWebsiteStep1SmsIntent(agent)
-
-  // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2SmsIntent(agent)
-
+ 
   const PurchaseDomainHandler = () => PurchaseDomainSmsIntent(agent,req.body.queryResult)
+  const PurchaseDomainYesHandler = () => PurchaseDomainYesSMSIntent(agent)
 
   // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2Intent(agent)
 
@@ -92,6 +86,7 @@ expressApp.post('/webaisms',(req, res) => {
   // intentMap.set('Create Website', BuildAWebsiteStep1Handler);
   // intentMap.set('BuildAWebsite - build website-Step2', BuildAWebsiteStep2Handler);
   intentMap.set('Purchase Domain', PurchaseDomainHandler);
+  intentMap.set('Purchase Domain - yes', PurchaseDomainYesHandler);
 
 
   try{

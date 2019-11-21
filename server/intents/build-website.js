@@ -28,10 +28,10 @@ const CreateWebsiteStep2Intent =  (conv,param) => {
           'Theme A',
         ],
         title: 'Theme 1',
-        description: 'This is a description of a carousel item.',
+        description: 'Type "Theme 1" to select this theme',
         image: new Image({
-          url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
-          alt: 'Image alternate text',
+          url: 'https://innojam-webai.azurewebsites.net/theme1.png',
+          alt: 'Theme 1',
         }),
       },
       // Add the second item to the carousel
@@ -42,11 +42,10 @@ const CreateWebsiteStep2Intent =  (conv,param) => {
           'Theme B',
       ],
         title: 'Theme 2',
-        description: 'Google Home is a voice-activated speaker powered by ' +
-          'the Google Assistant.',
+        description: 'Type "Theme 2" to select this theme',
         image: new Image({
-          url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
-          alt: 'Google Home',
+          url: 'https://innojam-webai.azurewebsites.net/theme2.png',
+          alt: 'Theme 2',
         }),
       },
       // Add the third item to the carousel
@@ -57,37 +56,17 @@ const CreateWebsiteStep2Intent =  (conv,param) => {
           'Theme C',
         ],
         title: 'Theme 3',
-        description: 'Pixel. Phone by Google.',
+        description: 'Type "Theme 3" to select this theme',
         image: new Image({
-          url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
-          alt: 'Google Pixel',
+          url: 'https://innojam-webai.azurewebsites.net/theme3.png',
+          alt: 'Theme 3',
         }),
       },
     },
   }));
 
-  conv.contexts.set('theme-selected', 5, param);
-  // const {websiteName,websiteCategory,websiteDescription} = param
-  // const websiteURL = websiteName.replace(' ','_')+'.constantcontact.online'
-  // conv.ask(`Here's your awesome website`);
-  // conv.ask(new BasicCard({
-  //   text: websiteDescription, // Note the two spaces before '\n' required for
-  //                                // a line break to be rendered in the card.
-  //   subtitle: websiteCategory,
-  //   title: websiteName,
-  //   buttons: new Button({
-  //     title: 'View your website',
-  //     url: `https://${websiteURL}/`,
-  //   }),
-  //   image: new Image({
-  //     url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
-  //     alt: websiteName,
-  //   }),
-  //   display: 'CROPPED',
-  // }));
-  // conv.ask('What you want to do next?');
-  // conv.ask(new Suggestions(`Purchase Domain`));
-  // conv.ask(new Suggestions(`Get listed on Google`));
+  conv.contexts.set('theme-selected', 5, param); 
+  
  
 }
 
@@ -95,16 +74,22 @@ const CreateWebsiteStep3Intent = (conv,params, option) =>{
 
   // const {websiteName,websiteCategory,websiteDescription} = conv.contexts.get('theme-selected')
    console.log(params, option)
+   
     const SELECTED_ITEM_RESPONSES = {
       'SELECTION_KEY_THEME_ONE': 'selected Theme 1',
       'SELECTION_KEY_THEME_TWO': 'selected Theme 2',
       'SELECTION_KEY_THEME_THREE': 'saelected Theme 3',
     };
 
+    const stringPart2 = (option && SELECTED_ITEM_RESPONSES[option]) || (params && SELECTED_ITEM_RESPONSES[params.selectedTheme]) 
+   
+
   //  conv.ask(SELECTED_ITEM_RESPONSES[option]);
   const {websiteName,websiteCategory,websiteDescription} = conv.contexts.get('theme-selected').parameters
   const websiteURL = websiteName.replace(' ','_')+'.constantcontact.online'
-  conv.ask(`Here's your awesome website with `+ (option && SELECTED_ITEM_RESPONSES[option]) || (params && SELECTED_ITEM_RESPONSES[params.selectedTheme]));
+
+  conv.ask(`Here's your awesome website with ${stringPart2}`);
+
   conv.ask(new BasicCard({
     text: websiteDescription, // Note the two spaces before '\n' required for
                                  // a line break to be rendered in the card.
@@ -115,7 +100,7 @@ const CreateWebsiteStep3Intent = (conv,params, option) =>{
       url: `https://${websiteURL}/`,
     }),
     image: new Image({
-      url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
+      url: 'https://innojam-webai.azurewebsites.net/endo.svg',
       alt: websiteName,
     }),
     display: 'CROPPED',
