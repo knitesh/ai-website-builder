@@ -86,9 +86,10 @@ const CreateWebsiteStep3Intent = (conv,params, option) =>{
 
   //  conv.ask(SELECTED_ITEM_RESPONSES[option]);
   const {websiteName,websiteCategory,websiteDescription} = conv.contexts.get('theme-selected').parameters
-  const websiteURL = websiteName.replace(' ','_')+'.constantcontact.online'
+  const websiteURL = `https://innojam-webai.azurewebsites.net/generatedSite.html?businessName=${websiteName}&businessCategory=${websiteCategory}&businessDescription=${websiteDescription}`
 
   conv.ask(`Here's your awesome website with ${stringPart2}`);
+
 
   conv.ask(new BasicCard({
     text: websiteDescription, // Note the two spaces before '\n' required for
@@ -97,7 +98,7 @@ const CreateWebsiteStep3Intent = (conv,params, option) =>{
     title: websiteName,
     buttons: new Button({
       title: 'View your website',
-      url: `https://${websiteURL}/`,
+      url: websiteURL,
     }),
     image: new Image({
       url: 'https://innojam-webai.azurewebsites.net/endo.svg',

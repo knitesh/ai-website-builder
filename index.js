@@ -35,6 +35,12 @@ const {
   CreateWebsiteStep3Intent,
   CreateWebsiteStep2Intent
 } = require("./server/intents/build-website");
+const {
+  CreateWebsiteIntentSMS,
+  CreateWebsiteStep2IntentSMS,
+  CreateWebsiteStep3IntentSMS  
+} = require("./server/intents/sms/build-website");
+
 
 // GMB Listing
 const { GmbListingYesIntent } = require("./server/intents/gmb-listing");
@@ -114,13 +120,23 @@ expressApp.post("/webaisms", (req, res) => {
   );
   console.log("\n\n************************************************");
 
+  // Welcome
   const WelcomeHandler = () => WelcomeSmsIntent(agent);
+
+  // Purchase Domain
   const PurchaseDomainHandler = () =>
     PurchaseDomainSmsIntent(agent, req.body.queryResult);
   const PurchaseDomainYesHandler = () => PurchaseDomainYesSMSIntent(agent);
 
+  // GMB Listing
   const GmbListingYesHandler = () =>
     GmbListingYesSmsIntent(agent, req.body.queryResult);
+
+    // Website Handler
+  const CreateWebsiteIntentHandler = () =>CreateWebsiteIntentSMS(agent)
+  const CreateWebsiteStep2IntentHandler = () => CreateWebsiteStep2IntentSMS(agent, req.body.queryResult)
+  const CreateWebsiteStep3IntentHandler = () => CreateWebsiteStep3IntentSMS(agent, req.body.queryResult)
+
 
   // const BuildAWebsiteStep2Handler = () =>BuildAWebsiteStep2Intent(agent)
 
@@ -131,10 +147,15 @@ expressApp.post("/webaisms", (req, res) => {
   // intentMap.set('Create Website', BuildAWebsiteStep1Handler);
   // intentMap.set('BuildAWebsite - build website-Step2', BuildAWebsiteStep2Handler);
   intentMap.set("Welcome Intent", WelcomeHandler);
+  //Purchase Domain
   intentMap.set("Purchase Domain", PurchaseDomainHandler);
   intentMap.set("Purchase Domain - yes", PurchaseDomainYesHandler);
   //GMB Listing
   intentMap.set("GMB Listing - yes", GmbListingYesHandler);
+  // Website Builder
+  intentMap.set("Create Website", CreateWebsiteIntentHandler);
+  intentMap.set("Create Website - Step2 - Start Creating New WebPage", CreateWebsiteStep2IntentHandler);
+  // intentMap.set("Create Website - Step3 - Start Creating New WebPage", CreateWebsiteStep3IntentHandler);
 
   try {
     agent.handleRequest(intentMap);

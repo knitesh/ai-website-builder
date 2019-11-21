@@ -33,22 +33,7 @@ const gmbListingYes = (conv, param) => {
           );
         }
         resolve();
-      });
-    // fetch(
-    //   "https://business-info-api.qa.ctctdev.co/v1.0/business_location/innojam",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json; charset=utf-8",
-    //       Cookie: "__cfduid=d7e4eacd733f297c997cbb271d7b19aea1565883978"
-    //     },
-    //     body:
-    //       '{"business_name":"Kathryn\'s test 2","business_category":"Computer consultant","business_address":"103 Drummer Rd 01720","business_phone":"781-202-3456"}'
-    //   }
-    // )
-    //   .then(res => res.json())
-    //   .then(res => console.log(res))
-    //   .catch(console.error.bind(console));
+      });   
   });
 };
 

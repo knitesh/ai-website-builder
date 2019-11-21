@@ -73,7 +73,7 @@ const purchaseDomainYes = (conv) => {
 
     conv.ask('Great!')
     conv.ask(new BasicCard({
-      text: ` Click on below button to enter your billing information and owning this awesome site`,
+      text: `Click on below button to enter your billing information`,
       subtitle: '',
       title: availableDomain,
       buttons: new Button({
@@ -86,6 +86,7 @@ const purchaseDomainYes = (conv) => {
       }),
       display: 'CROPPED',   
   }));
+  conv.ask('What do you want to do next?')
   conv.ask(new Suggestions(`Create website`));
   conv.ask(new Suggestions(`Get Listed`));
 }
