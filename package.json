@@ -19,7 +19,7 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "lodash": "^4.17.15",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "ngrok": "^3.2.5",
